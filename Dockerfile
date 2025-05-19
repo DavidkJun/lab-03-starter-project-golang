@@ -10,10 +10,12 @@ COPY . .
 RUN go build -o build/fizzbuzz
 
 # Етап запуску
-FROM scratch
+FROM gcr.io/distroless/static-debian12
+
+# Копіюємо бінарник і шаблони
+COPY --from=builder /usr/local/app/build/fizzbuzz /app/fizzbuzz
+COPY --from=builder /usr/local/app/templates /app/templates
 
 WORKDIR /app
-COPY --from=builder /usr/local/app/build/fizzbuzz ./fizzbuzz
-
 EXPOSE 8080
 CMD ["./fizzbuzz", "serve"]
